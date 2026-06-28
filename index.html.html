@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Promemoria Veterinario</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f4f8fb;
+      color: #1f2933;
+    }
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: 22px;
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 4px;
+      color: #0f5f7a;
+    }
+    .subtitle {
+      text-align: center;
+      color: #586069;
+      font-size: 14px;
+      margin-bottom: 22px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+    input, select, textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px;
+      border: 1px solid #cbd5df;
+      border-radius: 12px;
+      font-size: 16px;
+      background: #fff;
+    }
+    textarea {
+      min-height: 125px;
+      resize: vertical;
+      margin-top: 14px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 15px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .wa {
+      background: #25D366;
+      color: white;
+    }
+    .sms {
+      background: #0f5f7a;
+      color: white;
+    }
+    .copy {
+      background: #e7eef4;
+      color: #1f2933;
+    }
+    .note {
+      margin-top: 16px;
+      font-size: 12px;
+      color: #687782;
+      text-align: center;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🐾 Promemoria Veterinario</h1>
+    <div class="subtitle">Ambulatorio Veterinario dott. Nicola Faccia</div>
+
+    <label for="telefono">📞 Numero telefono</label>
+    <input id="telefono" type="tel" placeholder="Es. 3471234567" />
+
+    <label for="proprietario">👤 Proprietario</label>
+    <input id="proprietario" type="text" placeholder="Es. Sig. Rossi" />
+
+    <label for="animale">🐶 Nome animale</label>
+    <input id="animale" type="text" placeholder="Es. Luna" />
+
+    <label for="data">📅 Data appuntamento</label>
+    <input id="data" type="text" placeholder="Es. 30/06/2026" />
+
+    <label for="ora">🕒 Ora appuntamento</label>
+    <input id="ora" type="text" placeholder="Es. 17:30" />
+
+    <label for="tipo">📌 Tipo appuntamento</label>
+    <select id="tipo" onchange="generaMessaggio()">
+      <option value="visita">Visita</option>
+      <option value="vaccino">Vaccino / richiamo vaccinale</option>
+      <option value="controllo">Controllo</option>
+      <option value="esami">Esami / prelievo</option>
+      <option value="chirurgia">Chirurgia / intervento</option>
+      <option value="ecografia">Ecografia</option>
+    </select>
+
+    <label for="messaggio">✍️ Messaggio generato</label>
+    <textarea id="messaggio"></textarea>
+
+    <div class="buttons">
+      <button class="wa" onclick="apriWhatsApp()">📲 Apri WhatsApp</button>
+      <button class="sms" onclick="apriSMS()">✉️ Apri SMS</button>
+      <button class="copy" onclick="copiaMessaggio()">📋 Copia messaggio</button>
+    </div>
+
+    <div class="note">
+      I dati inseriti non vengono salvati. Il messaggio viene generato solo sul dispositivo.
+    </div>
+  </div>
+
+  <script>
+    const campi = ["telefono", "proprietario", "animale", "data", "ora", "tipo"];
+    campi.forEach(id => {
+      document.addEventListener("input", function(e) {
+        if (e.target && campi.includes(e.target.id)) generaMessaggio();
+      });
+    });
+
+    function pulisciNumero(numero) {
+      let n = numero.replace(/\D/g, "");
+      if (n.startsWith("00")) n = n.substring(2);
+      if (!n.startsWith("39")) n = "39" + n;
+      return n;
+    }
+
+    function generaMessaggio() {
+      const proprietario = document.getElementById("proprietario").value.trim() || "Gentile cliente";
+      const animale = document.getElementById("animale").value.trim() || "il suo animale";
+      const data = document.getElementById("data").value.trim() || "[data]";
+      const ora = document.getElementById("ora").value.trim() || "[ora]";
+      const tipo = document.getElementById("tipo").value;
+
+      let rigaTipo = "";
+      let notaExtra = "";
+
+      if (tipo === "visita") rigaTipo = "per la visita di " + animale;
+      if (tipo === "vaccino") rigaTipo = "per il vaccino/richiamo vaccinale di " + animale;
+      if (tipo === "controllo") rigaTipo = "per il controllo di " + animale;
+      if (tipo === "esami") rigaTipo = "per gli esami/prelievo di " + animale;
+      if (tipo === "chirurgia") {
+        rigaTipo = "per l'intervento di " + animale;
+        notaExtra = "\n\nRicordiamo di seguire le indicazioni ricevute riguardo al digiuno pre-operatorio.";
+      }
+      if (tipo === "ecografia") rigaTipo = "per l'ecografia di " + animale;
+
+      const testo = `Buongiorno ${proprietario},
+
+le ricordiamo l'appuntamento ${rigaTipo}
+
+📅 Data: ${data}
+🕒 Ora: ${ora}
+
+presso l'Ambulatorio Veterinario dott. Nicola Faccia.${notaExtra}
+
+Qualora non potesse essere presente, la preghiamo di avvisarci.
+
+Grazie.`;
+
+      document.getElementById("messaggio").value = testo;
+      return testo;
+    }
+
+    function apriWhatsApp() {
+      const numeroInput = document.getElementById("telefono").value.trim();
+      if (!numeroInput) {
+        alert("Inserisci il numero di telefono.");
+        return;
+      }
+      const numero = pulisciNumero(numeroInput);
+      const testo = encodeURIComponent(generaMessaggio());
+      window.location.href = `https://wa.me/${numero}?text=${testo}`;
+    }
+
+    function apriSMS() {
+      const numeroInput = document.getElementById("telefono").value.trim();
+      if (!numeroInput) {
+        alert("Inserisci il numero di telefono.");
+        return;
+      }
+      const numero = numeroInput.replace(/\s/g, "");
+      const testo = encodeURIComponent(generaMessaggio());
+      window.location.href = `sms:${numero}&body=${testo}`;
+    }
+
+    async function copiaMessaggio() {
+      const testo = generaMessaggio();
+      try {
+        await navigator.clipboard.writeText(testo);
+        alert("Messaggio copiato.");
+      } catch (e) {
+        alert("Non sono riuscito a copiare automaticamente. Puoi selezionare il testo e copiarlo manualmente.");
+      }
+    }
+
+    generaMessaggio();
+  </script>
+</body>
+</html>
