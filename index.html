@@ -1,415 +1,89 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Promemoria Veterinario V2</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      margin: 0;
-      padding: 18px;
-      background: #eef6fa;
-      color: #1f2933;
-    }
-    .container {
-      max-width: 560px;
-      margin: 0 auto;
-      background: white;
-      padding: 20px;
-      border-radius: 20px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-    }
-    h1 {
-      text-align: center;
-      font-size: 24px;
-      margin: 6px 0 2px;
-      color: #0f5f7a;
-    }
-    .subtitle {
-      text-align: center;
-      color: #586069;
-      font-size: 14px;
-      margin-bottom: 18px;
-    }
-    label {
-      display: block;
-      font-weight: 700;
-      margin-top: 12px;
-      margin-bottom: 5px;
-    }
-    input, select, textarea {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 12px;
-      border: 1px solid #cbd5df;
-      border-radius: 12px;
-      font-size: 16px;
-      background: #fff;
-    }
-    textarea {
-      min-height: 115px;
-      resize: vertical;
-    }
-    button {
-      border: none;
-      border-radius: 14px;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 10px;
-    }
-    .primary { background: #0f5f7a; color: white; }
-    .wa { background: #25D366; color: white; }
-    .sms { background: #2563eb; color: white; }
-    .calendar { background: #7c3aed; color: white; }
-    .copy { background: #e7eef4; color: #1f2933; }
-    .danger { background: #ef4444; color: white; }
-    .small { font-size: 13px; padding: 9px; border-radius: 10px; margin-top: 6px; }
-    .tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-    .tab {
-      background: #e7eef4;
-      color: #1f2933;
-    }
-    .tab.active {
-      background: #0f5f7a;
-      color: white;
-    }
-    .card {
-      border: 1px solid #d8e3ea;
-      border-radius: 14px;
-      padding: 12px;
-      margin-top: 10px;
-      background: #fbfdff;
-    }
-    .card strong {
-      color: #0f5f7a;
-    }
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .hidden { display: none; }
-    .note {
-      margin-top: 14px;
-      font-size: 12px;
-      color: #687782;
-      text-align: center;
-      line-height: 1.4;
-    }
-    .sent {
-      background: #ecfdf5;
-      border-color: #86efac;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assistente Veterinario V3</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;padding:16px;background:#eef6fa;color:#1f2933}
+.container{max-width:620px;margin:0 auto;background:white;padding:18px;border-radius:20px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+h1{text-align:center;font-size:23px;margin:6px 0 2px;color:#0f5f7a}.subtitle{text-align:center;color:#586069;font-size:14px;margin-bottom:16px}
+.tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:14px}
+button{border:none;border-radius:14px;padding:13px;font-size:15px;font-weight:800;cursor:pointer;width:100%;margin-top:8px}
+.tab{background:#e7eef4;color:#1f2933}.tab.active{background:#0f5f7a;color:white}
+label{display:block;font-weight:700;margin-top:12px;margin-bottom:5px}
+input,select,textarea{width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd5df;border-radius:12px;font-size:16px;background:#fff}
+textarea{min-height:110px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.hidden{display:none}
+.primary{background:#0f5f7a;color:white}.wa{background:#25D366;color:white}.sms{background:#2563eb;color:white}.calendar{background:#7c3aed;color:white}.danger{background:#ef4444;color:white}.sentBtn{background:#16a34a;color:white}
+.small{font-size:13px;padding:9px;border-radius:10px;margin-top:6px}.card{border:1px solid #d8e3ea;border-radius:14px;padding:12px;margin-top:10px;background:#fbfdff}.card strong{color:#0f5f7a}.sent{background:#ecfdf5;border-color:#86efac}.urgent{background:#fff7ed;border-color:#fdba74}
+.note{margin-top:14px;font-size:12px;color:#687782;text-align:center;line-height:1.4}.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:800;background:#e0f2fe;color:#075985;margin-bottom:6px}.empty{padding:18px;text-align:center;color:#64748b;background:#f8fafc;border-radius:14px;margin-top:10px}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>🐾 Promemoria Veterinario</h1>
-    <div class="subtitle">Ambulatorio Veterinario dott. Nicola Faccia</div>
-
-    <div class="tabs">
-      <button class="tab active" id="tabNuovo" onclick="mostra('nuovo')">➕ Nuovo</button>
-      <button class="tab" id="tabAgenda" onclick="mostra('agenda')">📅 Agenda</button>
-    </div>
-
-    <section id="nuovo">
-      <label>📞 Numero telefono</label>
-      <input id="telefono" type="tel" placeholder="Es. 3471234567" />
-
-      <label>👤 Proprietario</label>
-      <input id="proprietario" type="text" placeholder="Es. Sig. Rossi" />
-
-      <label>🐾 Nome animale</label>
-      <input id="animale" type="text" placeholder="Es. Luna" />
-
-      <div class="row">
-        <div>
-          <label>📅 Data</label>
-          <input id="data" type="date" />
-        </div>
-        <div>
-          <label>🕒 Ora</label>
-          <input id="ora" type="time" />
-        </div>
-      </div>
-
-      <label>📌 Tipo appuntamento</label>
-      <select id="tipo">
-        <option value="visita">Visita</option>
-        <option value="vaccino">Vaccino / richiamo vaccinale</option>
-        <option value="controllo">Controllo</option>
-        <option value="esami">Esami / prelievo</option>
-        <option value="chirurgia">Chirurgia / intervento</option>
-        <option value="ecografia">Ecografia</option>
-      </select>
-
-      <label>✍️ Messaggio</label>
-      <textarea id="messaggio"></textarea>
-
-      <button class="primary" onclick="salvaAppuntamento()">💾 Salva appuntamento</button>
-      <button class="calendar" onclick="creaCalendarioDaModulo()">📅 Crea evento calendario con promemoria 24h</button>
-      <button class="wa" onclick="apriWhatsAppDaModulo()">📲 WhatsApp subito</button>
-      <button class="sms" onclick="apriSMSDaModulo()">✉️ SMS subito</button>
-    </section>
-
-    <section id="agenda" class="hidden">
-      <button class="primary" onclick="renderAgenda()">🔄 Aggiorna agenda</button>
-      <button class="danger small" onclick="cancellaTutto()">🗑️ Cancella tutti gli appuntamenti salvati</button>
-      <div id="listaAgenda"></div>
-    </section>
-
-    <div class="note">
-      I dati vengono salvati solo nel browser del tuo dispositivo. Non c'è database online.
-      Per avere la notifica 24 ore prima, usa il pulsante calendario e conferma l'aggiunta evento.
-    </div>
-  </div>
-
+<div class="container">
+<h1>🐾 Assistente Veterinario</h1>
+<div class="subtitle">Ambulatorio Veterinario dott. Nicola Faccia</div>
+<div class="tabs">
+<button class="tab active" id="tabPromemoria" onclick="mostra('promemoria')">🔔 Promemoria</button>
+<button class="tab" id="tabNuovo" onclick="mostra('nuovo')">➕ Nuovo</button>
+<button class="tab" id="tabAgenda" onclick="mostra('agenda')">📅 Agenda</button>
+</div>
+<section id="promemoria">
+<div class="badge">Appuntamenti di domani da ricordare oggi</div>
+<button class="primary" onclick="renderPromemoria()">🔄 Aggiorna promemoria</button>
+<div id="listaPromemoria"></div>
+</section>
+<section id="nuovo" class="hidden">
+<label>📞 Numero telefono</label><input id="telefono" type="tel" placeholder="Es. 3471234567">
+<label>👤 Proprietario</label><input id="proprietario" type="text" placeholder="Es. Sig. Rossi">
+<label>🐾 Nome animale</label><input id="animale" type="text" placeholder="Es. Luna">
+<div class="row"><div><label>📅 Data appuntamento</label><input id="data" type="date"></div><div><label>🕒 Ora</label><input id="ora" type="time"></div></div>
+<label>📌 Tipo appuntamento</label><select id="tipo"><option value="visita">Visita</option><option value="vaccino">Vaccino / richiamo vaccinale</option><option value="controllo">Controllo</option><option value="esami">Esami / prelievo</option><option value="chirurgia">Chirurgia / intervento</option><option value="ecografia">Ecografia</option></select>
+<label>✍️ Messaggio</label><textarea id="messaggio"></textarea>
+<button class="primary" onclick="salvaAppuntamento()">💾 Salva appuntamento</button>
+<button class="calendar" onclick="creaCalendarioDaModulo()">📅 Crea evento calendario con avviso 24h</button>
+<button class="wa" onclick="apriWhatsAppDaModulo()">📲 WhatsApp subito</button>
+<button class="sms" onclick="apriSMSDaModulo()">✉️ SMS subito</button>
+</section>
+<section id="agenda" class="hidden">
+<label>🔍 Cerca</label><input id="cerca" type="text" placeholder="Cerca proprietario, animale o numero" oninput="renderAgenda()">
+<button class="primary" onclick="renderAgenda()">🔄 Aggiorna agenda</button>
+<button class="danger small" onclick="cancellaTutto()">🗑️ Cancella tutti gli appuntamenti salvati</button>
+<div id="listaAgenda"></div>
+</section>
+<div class="note">I dati restano solo nel browser del dispositivo. Non c'è database online. Per ricevere la notifica 24 ore prima, usa il pulsante calendario e conferma l'aggiunta evento.</div>
+</div>
 <script>
-  const campi = ["telefono","proprietario","animale","data","ora","tipo"];
-  campi.forEach(id => document.getElementById(id).addEventListener("input", generaMessaggio));
-
-  function mostra(sezione) {
-    document.getElementById("nuovo").classList.toggle("hidden", sezione !== "nuovo");
-    document.getElementById("agenda").classList.toggle("hidden", sezione !== "agenda");
-    document.getElementById("tabNuovo").classList.toggle("active", sezione === "nuovo");
-    document.getElementById("tabAgenda").classList.toggle("active", sezione === "agenda");
-    if (sezione === "agenda") renderAgenda();
-  }
-
-  function pulisciNumero(numero) {
-    let n = String(numero || "").replace(/\D/g, "");
-    if (n.startsWith("00")) n = n.substring(2);
-    if (!n.startsWith("39")) n = "39" + n;
-    return n;
-  }
-
-  function datiDaModulo() {
-    return {
-      id: Date.now(),
-      telefono: document.getElementById("telefono").value.trim(),
-      proprietario: document.getElementById("proprietario").value.trim(),
-      animale: document.getElementById("animale").value.trim(),
-      data: document.getElementById("data").value,
-      ora: document.getElementById("ora").value,
-      tipo: document.getElementById("tipo").value,
-      inviato: false
-    };
-  }
-
-  function testoTipo(tipo, animale) {
-    if (tipo === "visita") return "per la visita di " + animale;
-    if (tipo === "vaccino") return "per il vaccino/richiamo vaccinale di " + animale;
-    if (tipo === "controllo") return "per il controllo di " + animale;
-    if (tipo === "esami") return "per gli esami/prelievo di " + animale;
-    if (tipo === "chirurgia") return "per l'intervento di " + animale;
-    if (tipo === "ecografia") return "per l'ecografia di " + animale;
-    return "per l'appuntamento di " + animale;
-  }
-
-  function generaMessaggioConDati(d) {
-    const proprietario = d.proprietario || "Gentile cliente";
-    const animale = d.animale || "il suo animale";
-    const data = formatData(d.data) || "[data]";
-    const ora = d.ora || "[ora]";
-    let extra = "";
-
-    if (d.tipo === "chirurgia") {
-      extra = "\n\nRicordiamo di seguire le indicazioni ricevute riguardo al digiuno pre-operatorio.";
-    }
-
-    return `Buongiorno ${proprietario},
-
-le ricordiamo l'appuntamento ${testoTipo(d.tipo, animale)}
-
-📅 Data: ${data}
-🕒 Ora: ${ora}
-
-presso l'Ambulatorio Veterinario dott. Nicola Faccia.${extra}
-
-Qualora non potesse essere presente, la preghiamo di avvisarci.
-
-Grazie.`;
-  }
-
-  function generaMessaggio() {
-    const d = datiDaModulo();
-    const testo = generaMessaggioConDati(d);
-    document.getElementById("messaggio").value = testo;
-    return testo;
-  }
-
-  function formatData(data) {
-    if (!data) return "";
-    const [y,m,d] = data.split("-");
-    return `${d}/${m}/${y}`;
-  }
-
-  function salvaAppuntamento() {
-    const d = datiDaModulo();
-    if (!d.telefono || !d.data || !d.ora) {
-      alert("Inserisci almeno telefono, data e ora.");
-      return;
-    }
-    const appuntamenti = JSON.parse(localStorage.getItem("appuntamentiVet") || "[]");
-    appuntamenti.push(d);
-    appuntamenti.sort((a,b) => (a.data+a.ora).localeCompare(b.data+b.ora));
-    localStorage.setItem("appuntamentiVet", JSON.stringify(appuntamenti));
-    alert("Appuntamento salvato.");
-    pulisciModulo();
-  }
-
-  function pulisciModulo() {
-    ["telefono","proprietario","animale","data","ora"].forEach(id => document.getElementById(id).value = "");
-    document.getElementById("tipo").value = "visita";
-    generaMessaggio();
-  }
-
-  function apriWhatsApp(d) {
-    if (!d.telefono) { alert("Numero mancante."); return; }
-    const numero = pulisciNumero(d.telefono);
-    const testo = encodeURIComponent(generaMessaggioConDati(d));
-    window.location.href = `https://wa.me/${numero}?text=${testo}`;
-  }
-
-  function apriSMS(d) {
-    if (!d.telefono) { alert("Numero mancante."); return; }
-    const numero = d.telefono.replace(/\s/g, "");
-    const testo = encodeURIComponent(generaMessaggioConDati(d));
-    window.location.href = `sms:${numero}&body=${testo}`;
-  }
-
-  function apriWhatsAppDaModulo() { apriWhatsApp(datiDaModulo()); }
-  function apriSMSDaModulo() { apriSMS(datiDaModulo()); }
-
-  function creaCalendarioDaModulo() {
-    const d = datiDaModulo();
-    if (!d.data || !d.ora) {
-      alert("Inserisci data e ora.");
-      return;
-    }
-    creaEventoCalendario(d);
-  }
-
-  function pad(n) { return String(n).padStart(2, "0"); }
-
-  function toICSDate(data, ora) {
-    const [y,m,d] = data.split("-").map(Number);
-    const [hh,mm] = ora.split(":").map(Number);
-    return `${y}${pad(m)}${pad(d)}T${pad(hh)}${pad(mm)}00`;
-  }
-
-  function addOneHourICS(data, ora) {
-    const date = new Date(data + "T" + ora);
-    date.setHours(date.getHours() + 1);
-    return `${date.getFullYear()}${pad(date.getMonth()+1)}${pad(date.getDate())}T${pad(date.getHours())}${pad(date.getMinutes())}00`;
-  }
-
-  function creaEventoCalendario(d) {
-    const animale = d.animale || "animale";
-    const proprietario = d.proprietario || "cliente";
-    const title = `Promemoria vet: ${animale} - ${proprietario}`;
-    const start = toICSDate(d.data, d.ora);
-    const end = addOneHourICS(d.data, d.ora);
-    const desc = generaMessaggioConDati(d).replace(/\n/g, "\\n");
-
-    const ics = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Ambulatorio Veterinario Nicola Faccia//Promemoria//IT
-BEGIN:VEVENT
-UID:${Date.now()}@promemoria-veterinario
-DTSTAMP:${new Date().toISOString().replace(/[-:]/g,"").split(".")[0]}Z
-DTSTART:${start}
-DTEND:${end}
-SUMMARY:${title}
-DESCRIPTION:${desc}
-BEGIN:VALARM
-TRIGGER:-PT24H
-ACTION:DISPLAY
-DESCRIPTION:Inviare promemoria appuntamento a ${proprietario}
-END:VALARM
-END:VEVENT
-END:VCALENDAR`;
-
-    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "promemoria-veterinario.ics";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
-
-  function renderAgenda() {
-    const box = document.getElementById("listaAgenda");
-    const appuntamenti = JSON.parse(localStorage.getItem("appuntamentiVet") || "[]");
-    if (!appuntamenti.length) {
-      box.innerHTML = "<p>Nessun appuntamento salvato.</p>";
-      return;
-    }
-    box.innerHTML = "";
-    appuntamenti.forEach((d, index) => {
-      const card = document.createElement("div");
-      card.className = "card" + (d.inviato ? " sent" : "");
-      card.innerHTML = `
-        <strong>${d.animale || "Animale"}</strong> — ${d.proprietario || "Cliente"}<br>
-        📅 ${formatData(d.data)} 🕒 ${d.ora}<br>
-        📌 ${d.tipo}<br>
-        📞 ${d.telefono}
-        <button class="wa small" onclick="azioneWhatsApp(${index})">📲 WhatsApp</button>
-        <button class="sms small" onclick="azioneSMS(${index})">✉️ SMS</button>
-        <button class="calendar small" onclick="azioneCalendario(${index})">📅 Calendario 24h</button>
-        <button class="copy small" onclick="segnaInviato(${index})">✅ Segna inviato</button>
-        <button class="danger small" onclick="elimina(${index})">🗑️ Elimina</button>
-      `;
-      box.appendChild(card);
-    });
-  }
-
-  function getApp(index) {
-    return JSON.parse(localStorage.getItem("appuntamentiVet") || "[]")[index];
-  }
-
-  function setApps(apps) {
-    localStorage.setItem("appuntamentiVet", JSON.stringify(apps));
-  }
-
-  function azioneWhatsApp(index) { apriWhatsApp(getApp(index)); }
-  function azioneSMS(index) { apriSMS(getApp(index)); }
-  function azioneCalendario(index) { creaEventoCalendario(getApp(index)); }
-
-  function segnaInviato(index) {
-    const apps = JSON.parse(localStorage.getItem("appuntamentiVet") || "[]");
-    apps[index].inviato = true;
-    setApps(apps);
-    renderAgenda();
-  }
-
-  function elimina(index) {
-    if (!confirm("Eliminare questo appuntamento?")) return;
-    const apps = JSON.parse(localStorage.getItem("appuntamentiVet") || "[]");
-    apps.splice(index, 1);
-    setApps(apps);
-    renderAgenda();
-  }
-
-  function cancellaTutto() {
-    if (!confirm("Cancellare tutti gli appuntamenti salvati su questo dispositivo?")) return;
-    localStorage.removeItem("appuntamentiVet");
-    renderAgenda();
-  }
-
-  generaMessaggio();
+const campi=["telefono","proprietario","animale","data","ora","tipo"];
+campi.forEach(id=>document.getElementById(id).addEventListener("input",generaMessaggio));
+function mostra(s){["promemoria","nuovo","agenda"].forEach(x=>{document.getElementById(x).classList.toggle("hidden",s!==x);document.getElementById("tab"+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle("active",s===x)});if(s==="promemoria")renderPromemoria();if(s==="agenda")renderAgenda()}
+function domaniISO(){const d=new Date();d.setDate(d.getDate()+1);return d.toISOString().slice(0,10)}
+function formatData(data){if(!data)return"";const[y,m,d]=data.split("-");return d+"/"+m+"/"+y}
+function pulisciNumero(numero){let n=String(numero||"").replace(/\D/g,"");if(n.startsWith("00"))n=n.substring(2);if(!n.startsWith("39"))n="39"+n;return n}
+function datiDaModulo(){return{id:Date.now(),telefono:document.getElementById("telefono").value.trim(),proprietario:document.getElementById("proprietario").value.trim(),animale:document.getElementById("animale").value.trim(),data:document.getElementById("data").value,ora:document.getElementById("ora").value,tipo:document.getElementById("tipo").value,inviato:false}}
+function testoTipo(tipo,animale){if(tipo==="visita")return"per la visita di "+animale;if(tipo==="vaccino")return"per il vaccino/richiamo vaccinale di "+animale;if(tipo==="controllo")return"per il controllo di "+animale;if(tipo==="esami")return"per gli esami/prelievo di "+animale;if(tipo==="chirurgia")return"per l'intervento di "+animale;if(tipo==="ecografia")return"per l'ecografia di "+animale;return"per l'appuntamento di "+animale}
+function generaMessaggioConDati(d){const p=d.proprietario||"Gentile cliente",a=d.animale||"il suo animale",data=formatData(d.data)||"[data]",ora=d.ora||"[ora]";let extra="";if(d.tipo==="chirurgia")extra="\n\nRicordiamo di seguire le indicazioni ricevute riguardo al digiuno pre-operatorio.";return "Buongiorno "+p+",\n\nle ricordiamo l'appuntamento "+testoTipo(d.tipo,a)+"\n\n📅 Data: "+data+"\n🕒 Ora: "+ora+"\n\npresso l'Ambulatorio Veterinario dott. Nicola Faccia."+extra+"\n\nQualora non potesse essere presente, la preghiamo di avvisarci.\n\nGrazie."}
+function generaMessaggio(){const t=generaMessaggioConDati(datiDaModulo());document.getElementById("messaggio").value=t;return t}
+function getApps(){return JSON.parse(localStorage.getItem("appuntamentiVetV3")||localStorage.getItem("appuntamentiVet")||"[]")}
+function setApps(apps){localStorage.setItem("appuntamentiVetV3",JSON.stringify(apps))}
+function salvaAppuntamento(){const d=datiDaModulo();if(!d.telefono||!d.data||!d.ora){alert("Inserisci almeno telefono, data e ora.");return}const a=getApps();a.push(d);a.sort((x,y)=>(x.data+x.ora).localeCompare(y.data+y.ora));setApps(a);alert("Appuntamento salvato. Ora crea anche l'evento calendario se vuoi la notifica 24 ore prima.");pulisciModulo();mostra("promemoria")}
+function pulisciModulo(){["telefono","proprietario","animale","data","ora"].forEach(id=>document.getElementById(id).value="");document.getElementById("tipo").value="visita";generaMessaggio()}
+function apriWhatsApp(d){if(!d.telefono){alert("Numero mancante.");return}window.location.href="https://wa.me/"+pulisciNumero(d.telefono)+"?text="+encodeURIComponent(generaMessaggioConDati(d))}
+function apriSMS(d){if(!d.telefono){alert("Numero mancante.");return}window.location.href="sms:"+d.telefono.replace(/\s/g,"")+"&body="+encodeURIComponent(generaMessaggioConDati(d))}
+function apriWhatsAppDaModulo(){apriWhatsApp(datiDaModulo())}function apriSMSDaModulo(){apriSMS(datiDaModulo())}
+function creaCalendarioDaModulo(){const d=datiDaModulo();if(!d.data||!d.ora){alert("Inserisci data e ora.");return}creaEventoCalendario(d)}
+function pad(n){return String(n).padStart(2,"0")}
+function toICSDate(data,ora){const[y,m,d]=data.split("-").map(Number);const[hh,mm]=ora.split(":").map(Number);return ""+y+pad(m)+pad(d)+"T"+pad(hh)+pad(mm)+"00"}
+function addOneHourICS(data,ora){const dt=new Date(data+"T"+ora);dt.setHours(dt.getHours()+1);return ""+dt.getFullYear()+pad(dt.getMonth()+1)+pad(dt.getDate())+"T"+pad(dt.getHours())+pad(dt.getMinutes())+"00"}
+function creaEventoCalendario(d){const animale=d.animale||"animale",p=d.proprietario||"cliente",title="Inviare promemoria: "+animale+" - "+p,start=toICSDate(d.data,d.ora),end=addOneHourICS(d.data,d.ora),desc=generaMessaggioConDati(d).replace(/\n/g,"\\n");const ics="BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Ambulatorio Veterinario Nicola Faccia//Assistente//IT\nBEGIN:VEVENT\nUID:"+Date.now()+"@assistente-veterinario\nDTSTAMP:"+new Date().toISOString().replace(/[-:]/g,"").split(".")[0]+"Z\nDTSTART:"+start+"\nDTEND:"+end+"\nSUMMARY:"+title+"\nDESCRIPTION:Apri Assistente Veterinario dalla Home e invia WhatsApp/SMS.\\n\\n"+desc+"\nBEGIN:VALARM\nTRIGGER:-PT24H\nACTION:DISPLAY\nDESCRIPTION:Apri Assistente Veterinario e invia promemoria a "+p+"\nEND:VALARM\nEND:VEVENT\nEND:VCALENDAR";const blob=new Blob([ics],{type:"text/calendar;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="promemoria-veterinario.ics";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url)}
+function creaCard(d,index){const card=document.createElement("div");card.className="card"+(d.inviato?" sent":"")+" "+(!d.inviato?"urgent":"");card.innerHTML="<strong>"+(d.animale||"Animale")+"</strong> — "+(d.proprietario||"Cliente")+"<br>📅 "+formatData(d.data)+" 🕒 "+d.ora+"<br>📌 "+d.tipo+"<br>📞 "+d.telefono+(d.inviato?"<br>✅ Promemoria segnato come inviato":"")+"<button class='wa small' onclick='azioneWhatsApp("+index+")'>📲 WhatsApp</button><button class='sms small' onclick='azioneSMS("+index+")'>✉️ SMS</button><button class='sentBtn small' onclick='segnaInviato("+index+")'>✅ Segna inviato</button><button class='calendar small' onclick='azioneCalendario("+index+")'>📅 Crea avviso 24h</button><button class='danger small' onclick='elimina("+index+")'>🗑️ Elimina</button>";return card}
+function renderPromemoria(){const box=document.getElementById("listaPromemoria"),apps=getApps(),target=domaniISO(),daInviare=apps.map((d,i)=>({d,i})).filter(x=>x.d.data===target&&!x.d.inviato);if(!daInviare.length){box.innerHTML="<div class='empty'>Nessun promemoria da inviare per domani.<br><br>Se hai appuntamenti domani già salvati come inviati, li trovi in Agenda.</div>";return}box.innerHTML="";daInviare.forEach(x=>box.appendChild(creaCard(x.d,x.i)))}
+function renderAgenda(){const box=document.getElementById("listaAgenda"),c=(document.getElementById("cerca").value||"").toLowerCase(),apps=getApps(),f=apps.map((d,i)=>({d,i})).filter(x=>(`${x.d.proprietario} ${x.d.animale} ${x.d.telefono} ${x.d.tipo}`).toLowerCase().includes(c));if(!f.length){box.innerHTML="<div class='empty'>Nessun appuntamento trovato.</div>";return}box.innerHTML="";f.forEach(x=>box.appendChild(creaCard(x.d,x.i)))}
+function getApp(i){return getApps()[i]}function azioneWhatsApp(i){apriWhatsApp(getApp(i))}function azioneSMS(i){apriSMS(getApp(i))}function azioneCalendario(i){creaEventoCalendario(getApp(i))}
+function segnaInviato(i){const apps=getApps();apps[i].inviato=true;setApps(apps);renderPromemoria();renderAgenda()}
+function elimina(i){if(!confirm("Eliminare questo appuntamento?"))return;const apps=getApps();apps.splice(i,1);setApps(apps);renderPromemoria();renderAgenda()}
+function cancellaTutto(){if(!confirm("Cancellare tutti gli appuntamenti salvati su questo dispositivo?"))return;localStorage.removeItem("appuntamentiVet");localStorage.removeItem("appuntamentiVetV3");renderPromemoria();renderAgenda()}
+generaMessaggio();renderPromemoria();
 </script>
 </body>
 </html>
